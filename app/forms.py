@@ -18,11 +18,11 @@ class RegisterForm(FlaskForm):
     confirmpassword=PasswordField('Confirm Password',validators=[InputRequired(message='Retype password')])
     username=StringField('User Name',validators=[InputRequired(message='User Name is required')])
     location=StringField('Location',validators=[InputRequired(message='Location is required')])
-    biography=TextAreaField('Bigraphy',validators=[InputRequired(message='Biography is required')])
-    profile_photo = FileField('Image', validators=[FileRequired('Please input a file'), FileAllowed(['jpg', 'png'], 'Images only!')])
+    biography=TextAreaField('Biography',validators=[InputRequired(message='Biography is required')])
+    profile_photo = FileField('Image', validators=[FileRequired('Please input a file'), FileAllowed(['jpg', 'jpeg','png'], 'Images only!')])
 
 class PostForm(FlaskForm):
-    photo=FileField('Photo', validators=[FileRequired('Please input a file'), FileAllowed(['jpg', 'png'], 'Images only!')])
+    photo=FileField('Photo', validators=[FileRequired('Please input a file'), FileAllowed(['jpg','jpeg', 'png'], 'Images only!')])
     caption=StringField('Caption',validators=[InputRequired(message='Caption is required')])
 
 class FollowForm(FlaskForm):

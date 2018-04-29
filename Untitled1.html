@@ -1,0 +1,53 @@
+<div v-if="usertoken!==''">
+            <div v-if="error ===''">
+                <div id="profile" class=" container jumbotron col-md-12 sticky-top" >
+                    <div class="row">
+                        <div class="col-md-2"> 
+                            <img class="displayphoto" v-bind:src="userinfo.photo" />
+                        </div>
+                        <div class="col-md-7"> 
+                            <p>{{userinfo.fname}}<span> {{userinfo.lname}}</span></p>
+                            <p>{{userinfo.location}}</p>
+                            <p>Member since {{userinfo.joined}}</p>
+                            <p>{{userinfo.bio}}</p>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-2 afloat-left">
+                                    <p class="text-center"><span>{{numposts}}</span></br> Posts</p>
+                                </div>
+                                <div class="col-md-1 float-right">
+                                    <p class="text-right"><span id='followers'>{{follows}}</span> </br>Followers</p>
+                                </div>
+                            </div>
+                            <div float-right>
+                                <br><br>
+                                <form method="POST" @submit.prevent="follow">
+                                    <input  id='userid' type="hidden" :value=userinfo.id >
+                                    <div v-if="toshow=='Yes'">
+                                        <button id='follow' class="btn btn-primary col-md-6" >Follow</button>
+                                    </div>
+                                    <div v-else>
+                                        <button disabled class="btn btn-success col-md-6" >Follow</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="posts.length > 0">
+                        <div v-for="photo in posts">
+                            <img v-bind:src="photo.photo"/>
+                        </div>
+                </div>
+                <div v-else>
+                    <h3>No posts yet</h3>
+                </div>
+            </div>
+            <div class="jumbotron" v-else>
+                <h1>User Doesn't exist</h1>
+            </div>
+            </div>
+            <div class="jumbotron">
+                <h3>You are not logged in</h3>
+            </div>

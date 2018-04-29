@@ -1,3 +1,100 @@
 body {
     padding-top: 5rem;
+    background-color:#EBE9E9;
+}
+
+.jumbotron{
+    background-color: white;
+    width:30em;
+    height: inherit;
+    
+}
+
+#profile{
+    width:inherit;
+    height:inherit;
+    padding-top:1em;
+}
+
+.photogramicon{
+    width:4%; 
+    height:4%;
+}
+
+.homelogo{
+    padding-left:8em;
+    margin-top:0em;
+}
+
+.font{
+    font-family: 'Tangerine', cursive;
+    padding-left:1%;
+    font-size: 30px;
+    font-weight: bolder;
+}
+
+.homelogoname{
+    font-size:48px;
+}
+
+.form{
+    position: relative;
+    top: 10em;
+    left: 20em;
+}
+
+.iconimage{
+    width:30px; 
+    height:30px;
+}
+
+.contentdisplay{
+    position:relative;
+    top:10em;
+}
+.regular{
+    padding-left:30%;
+    padding-top:5%;
+}
+.shadow {
+    box-shadow: 5px 5px 25px #888888;
+}
+
+.homeimage{
+    width:inherit;
+    height:21em;
+}
+
+.follow{
+    padding-left:35%;
+    color:grey;
+}
+
+.posts{
+    padding-left:25%;
+    color:grey;
+}
+.colors{
+    color:black;
+    font-size:36px;
+}
+.followbutton{
+    padding-left:30%;
+}
+.homedisplay{
+    height:100%;
+}
+
+.input-group,.formlabel{
+    font-weight:bold;
+}
+
+.displayphoto{
+    width:10em;
+    height:10em;
+}
+
+.postphotos{
+    width:300px;
+    height:300px;
 }
