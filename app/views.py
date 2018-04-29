@@ -6,7 +6,7 @@ This file creates your application.
 """
 
 from app import app, db, filefolder,login_manager,token_key
-from flask import render_template, request, url_for ,redirect,flash,jsonify,g
+from flask import render_template, request, url_for ,redirect,flash,jsonify, g, session
 from flask_login import login_user, logout_user, current_user, login_required
 from forms import LoginForm, PostForm, RegisterForm
 from models import Users, Posts, Follows, Likes
@@ -116,8 +116,8 @@ def register():
 
 @app.route("/api/auth/login", methods=["POST"])
 def login():
-    if current_user.is_authenticated:
-        return jsonify(errors=[{'error':['You are already logged in.']}])
+    #if session['userid']:
+    #    return jsonify(errors=[{'error':['You are already logged in.']}])
     form = LoginForm()
     if request.method == "POST" and form.validate_on_submit():
         # change this to actually validate the entire form submission
@@ -128,9 +128,9 @@ def login():
         user=Users.query.filter_by(username=username,password=password).first()
             # Get the username and password values from the form.
         if user is not None:
-            login_user(user)
             payload = {'user_id' : user.id}
             token = jwt.encode(payload, token_key)
+            session['userid'] = user.id;
             return jsonify(response=[{'message':'Log in successful','token': token, 'userid': user.id,'userphoto':'/static/uploads/'+user.profile_photo}])
         else:
             return jsonify(errors=[{'error':['Password and user name does not match our records.']}])
@@ -139,10 +139,9 @@ def login():
 
 @app.route("/api/auth/logout",methods=["GET"])
 @requires_auth
-@login_required
 def logout():
     g.current_user=None
-    logout_user()
+    session.pop('userid')
     return jsonify(response=[{'message':'User successfully logged out.'}])
 
     
@@ -152,8 +151,8 @@ def addpost(user_id):
     form=PostForm()
     if request.method=="GET":
         thisuser=''
-        if user_id==0 or user_id==current_user.id:
-            uid=current_user.id
+        if user_id==0 or user_id==session['userid']:
+            uid=session['userid']
             thisuser='Yes'
             
         else:
@@ -161,10 +160,10 @@ def addpost(user_id):
             thisuser='No'
         user=Users.query.filter_by(id=uid).first()
         if user is not None:
-            userinfo={'id':user.id,'username':user.username,'fname':user.first_name,'lname':user.last_name,'location':user.location,'photo':'/static/uploads/'+user.profile_photo,'bio':user.biography,'joined':user.joined_on}
+            userinfo={'id':user.id,'username':user.username,'fname':user.first_name,'lname':user.last_name,'location':user.location,'photo':'/static/uploads/'+user.profile_photo,'bio':user.biography,'joined':user.joined_on.strftime("%d %b %Y")}
             posts=Posts.query.filter_by(user_id=uid).all()
             follows=Follows.query.filter_by(user_id=uid).all()
-            following=Follows.query.filter_by(follower_id=current_user.id, user_id=uid).first()
+            following=Follows.query.filter_by(follower_id=session['userid'], user_id=uid).first()
             isfollowing=''
             if following is None:
                 isfollowing='No'
@@ -177,7 +176,7 @@ def addpost(user_id):
         image=form.photo.data
         filename=secure_filename(image.filename)
         created=datetime.datetime.now()
-        post=Posts(current_user.id,filename,form.caption.data,created)
+        post=Posts(session['userid'],filename,form.caption.data,created)
         db.session.add(post)
         db.session.commit()
         image.save(os.path.join(filefolder,filename))
@@ -188,7 +187,7 @@ def addpost(user_id):
 @requires_auth
 def follow(user_id):
     if request.method=="POST":
-        follow=Follows(user_id,current_user.id)
+        follow=Follows(user_id,session['userid'])
         db.session.add(follow)
         db.session.commit()
         user=Users.query.filter_by(id=user_id).first()
@@ -204,7 +203,7 @@ def getpost():
 @requires_auth
 def likepost(post_id):
     if request.method=="POST":
-        like=Likes(current_user.id,post_id)
+        like=Likes(session['userid'],post_id)
         db.session.add(like)
         db.session.commit()
         count=countlikes(post_id)
@@ -231,7 +230,7 @@ def convertposts(posts):
         user=Users.query.filter_by(id=posts[i].user_id).first();
         username=user.username;
         profilephoto=user.profile_photo;
-        likevar=Likes.query.filter_by(post_id=posts[i].id,user_id=current_user.id).first()
+        likevar=Likes.query.filter_by(post_id=posts[i].id,user_id=session['userid']).first()
         if likevar is None:
             liketest='No'
         else:
@@ -241,7 +240,7 @@ def convertposts(posts):
         'user_id':posts[i].user_id,
         'photo':"/static/uploads/"+posts[i].photo,
         'caption':posts[i].caption,
-        'created_on':posts[i].created_on,
+        'created_on':posts[i].created_on.strftime("%B %Y"),
         'likes':countlikes(posts[i].id),
         'username':username,
         'userphoto':'/static/uploads/'+profilephoto,

@@ -389,32 +389,25 @@ const AddPost=Vue.component('addpost',{
 
 const Explorer=Vue.component('Allposts',{
 template:`
-            <div class="container regular" v-if="usertoken !=''">
-             <div style="margin-top: 10%;">
-                <div class="col-md-5 float-right">
-                    <router-link class="btn btn-success col-md-6" to="/postnew">New Post</router-link>
-                </div>
-                <div v-if="posts.length>=1" class="row col-md-7">
+            <div class="container" v-if="usertoken !=''">
+             <div class="row">
+                <div v-if="posts.length>=1" class="row col-md-7 float-left">
                     <div class="jumbotron shadow" v-for="post in posts">
                         <div class="row">
-                            <img style="position:relative; left:5%; width:10%; height:10%" v-bind:src="post.userphoto"> <h5 style="position:relative; left:10%">{{post.username}}</h5>
+                            <img class="postuserphoto" v-bind:src="post.userphoto"> <h5 class="align-middle" >{{post.username}}</h5>
                         </div>
                         <br>
-                        <div style="padding-left:0%; padding-right:0%; margin-left:0%; margin-right:0%;">
-                        <img style="width:100%; height:100%" v-bind:src="post.photo"/>
-                        </div>
-                        <br>
-                        <p>{{post.caption}}</p>
                         <div>
+                            <img class="img-fluid postimages" v-bind:src="post.photo"/>
+                        </div>
+                        <br>
+                        <p class="caption">{{post.caption}}</p>
+                        <div class="row">
                             <div v-if="post.likebyuser=='No'">
-                                <button :id=post.id v-on:click="like(post.id)" style="background-color:transparent">
-                                    <img style="width:35px; height:35px" v-bind:src="'static/uploads/pgheart.png'" />
-                                </button>
+                                    <img :id=post.id v-on:click="like(post.id)" style="width:35px; height:35px" v-bind:src="'static/uploads/pgheart.png'" />
                             </div>
                             <div v-else>
-                                <button style="background-color:transparent" disabled>
                                     <img style="width:35px; height:35px" v-bind:src="'static/uploads/pgheart.png'" />
-                                </button>
                             </div>
                         <p>Likes: <span :id="'like'+post.id">{{post.likes}}</span></p></div>
                         <p>{{post.created_on}}</p>
@@ -422,6 +415,9 @@ template:`
                 </div>
                 <div class="jumbotron" v-else>
                     <h5> No Posts</h5>
+                </div>
+                <div class="col-md-5 float-right">
+                    <router-link class="btn btn-success col-md-6" to="/postnew">New Post</router-link>
                 </div>
             </div>
         </div>
