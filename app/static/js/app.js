@@ -44,7 +44,7 @@ Vue.component('app-header', {
         return {
             user: [],
             userid:'',
-            userphoto:'/static/uploads/instagram.png',
+            userphoto:'/static/images/instagram.png',
         }
     },
     methods:{
@@ -56,7 +56,7 @@ Vue.component('app-header', {
                 self.userphoto=localStorage.getItem('userphoto');
             }
             else{
-                self.userphoto='/static/uploads/instagram.png';  
+                self.userphoto='/static/images/instagram.png';  
             }
             
         }
@@ -65,7 +65,11 @@ Vue.component('app-header', {
 
 Vue.component('app-footer', {
     template: `
-    
+    <footer class="page-footer bg-primary font-small pt-4 mt-4">
+        <div class="footer-copyright py-3 text-center">
+            <p>Copyright &copy; Photogram.</p>
+        </div>
+    </footer>
     `
 });
 
@@ -88,7 +92,11 @@ const Home = Vue.component('home', {
             </div>
         </div>
     </div>
-    <div class="row regular" v-else><div class="jumbotron shadow"><h3 class="align-middle">You are already logged in</h3></div></div>
+    <div class="row regular" v-else>
+        <div class="jumbotron shadow">
+            <h3 class="align-middle">You are already logged in</h3>
+        </div>
+    </div>
    `,
     created: function(){
         let self = this;
@@ -100,67 +108,78 @@ const Home = Vue.component('home', {
     data: function() {
        return {
            usertoken:'Not logged in',
-           iconphoto:'/static/uploads/instagram.png',
-           homephoto:'/static/uploads/download.jpg',
+           iconphoto:'/static/images/instagram.png',
+           homephoto:'/static/images/download.jpg',
        }
     }
 });
 
 const Register=Vue.component('register',{
-    template:`<div class="row container regular">
-        <p class="lead col-md-12 formlabel">Register</p>
-        <div class="jumbotron shadow">
-        <ul class="list-group">
-            <li class="col-md-12 list-group-item list-group-item-danger" v-for="message in error" v-if="error.length > 1">
-                {{message}}
-            </li>
-        </ul>
-        <form class="col-md-12" id="registerform" @submit.prevent="register" method="POST" enctype="multipart/form-data">
-            <label class="input-group">Username</label>
-            <input class="form-control" type="text" name="username">
-            <br>
-            
-            <label class="input-group">Password</label>
-            <input class="form-control" type="password" name="password">
-            <br>
-            
-            <label class="input-group">Retype-Password</label>
-            <input class="form-control" type="password" name="confirmpassword">
-            <br>
-            
-            <label class="input-group">Firstname</label>
-            <input class="form-control"  type="text" name="fname">
-            <br>
-            
-            <label class="input-group">Lastname</label>
-            <input class="form-control" type="text" name="lname">
-            <br>
-            
-            <label class="input-group">Email</label>
-            <input class="form-control"  type="email" name="email">
-            <br>
-            <label class="input-group">Location</label>
-            <input class="form-control"  type="text" name="location">
-            <br>
-            
-            <label class="input-group">Biography</label>
-            <textarea class="form-control col-md" id="desc" rows="5" name="biography"></textarea>
-            <br>
-            
-            <label class="input-group">Photo</label>
-            <input class="btn btn-default btn-file" type="file"  name="profile_photo"/>
-            
-            <br><br>
-            
-            <button class="btn btn-success col-md-12" type="submit">Register</button>
-            <br><br>
-        </form>
-        </div>   
-    </div>`
-, data: function(){
+    template:`<div v-if="usertoken=='Not logged in'" class="row container regular">
+                    <p class="lead col-md-12 formlabel">Register</p>
+                    <div class="jumbotron shadow">
+                        <ul class="list-group">
+                            <li class="col-md-12 list-group-item list-group-item-danger" v-for="message in error" v-if="error.length > 1">
+                                {{message}}
+                            </li>
+                        </ul>
+                    <form class="col-md-12" id="registerform" @submit.prevent="register" method="POST" enctype="multipart/form-data">
+                        <label class="input-group">Username</label>
+                        <input class="form-control" type="text" name="username">
+                        <br>
+                        
+                        <label class="input-group">Password</label>
+                        <input class="form-control" type="password" name="password">
+                        <br>
+                        
+                        <label class="input-group">Retype-Password</label>
+                        <input class="form-control" type="password" name="confirmpassword">
+                        <br>
+                        
+                        <label class="input-group">Firstname</label>
+                        <input class="form-control"  type="text" name="fname">
+                        <br>
+                        
+                        <label class="input-group">Lastname</label>
+                        <input class="form-control" type="text" name="lname">
+                        <br>
+                        
+                        <label class="input-group">Email</label>
+                        <input class="form-control"  type="email" name="email">
+                        <br>
+                        <label class="input-group">Location</label>
+                        <input class="form-control"  type="text" name="location">
+                        <br>
+                        
+                        <label class="input-group">Biography</label>
+                        <textarea class="form-control col-md" id="desc" rows="5" name="biography"></textarea>
+                        <br>
+                        
+                        <label class="input-group">Photo</label>
+                        <input class="btn btn-default btn-file" type="file"  name="profile_photo"/>
+                        
+                        <br><br>
+                        
+                        <button class="btn btn-success col-md-12" type="submit">Register</button>
+                        <br><br>
+                    </form>
+                </div>   
+            </div>
+        <div class="row regular" v-else>
+            <div class="jumbotron shadow">
+                <h3 class="align-middle">You are already a user</h3>
+            </div>
+        </div>`
+, created:function(){
+    let self = this;
+        if (localStorage.getItem('token')){
+            self.usertoken=localStorage.getItem('token');
+        }
+},data: function(){
     return {
         response:[],
-        error:[]
+        error:[],
+        usertoken:'Not logged in',
     }
 },methods:{
     register: function(){
@@ -196,28 +215,35 @@ const Register=Vue.component('register',{
 });
 
 const Login =Vue.component('login',{
-    template:`<div class="row container regular">
-    <p class=" col-md-12 lead formlabel"> Login</p>
-    <div class="jumbotron shadow">
-    <ul class="list-group">
-        <li v-for="error in error" class="list-group-item list-group-item-danger">
-            {{error}} <br>
-        </li>
-    </ul>
-    <form class="col-md-12" id="loginform" method="POST" @submit.prevent="login">
-    <label class="input-group">Username</label>
-    <input class="form-control" type="text" name="username">
-    <br><br>
-    <label class="input-group" >Password</label>
-    <input class="form-control" type="password" name="password"> <br><br>
-    <button class="btn btn-success col-md-12" type="submit">Login</button>
-    </form>
-    </div>
-    </div>`
-, data: function() {
+    template:`<div v-if="usertoken=='Not logged in'" class="row container regular">
+                    <p class=" col-md-12 lead formlabel"> Login</p>
+                    <div class="jumbotron shadow">
+                        <ul class="list-group">
+                            <li v-for="error in error" class="list-group-item list-group-item-danger">
+                                {{error}} <br>
+                            </li>
+                        </ul>
+                        <form class="col-md-12" id="loginform" method="POST" @submit.prevent="login">
+                            <label class="input-group">Username</label>
+                            <input class="form-control" type="text" name="username">
+                            <br><br>
+                            <label class="input-group" >Password</label>
+                            <input class="form-control" type="password" name="password"> 
+                            <br><br>
+                            <button class="btn btn-success col-md-12" type="submit">Login</button>
+                        </form>
+                    </div>
+                </div><div class="row regular" v-else><div class="jumbotron shadow"><h3 class="align-middle">You are already logged in</h3></div></div>`
+,created:function(){
+    let self = this;
+        if (localStorage.getItem('token')){
+            self.usertoken=localStorage.getItem('token');
+        }
+}, data: function() {
     return {
         response:[],
-        error:[]
+        error:[],
+        usertoken:'Not logged in',
     }
     
 }, methods:{
@@ -335,11 +361,15 @@ const AddPost=Vue.component('addpost',{
                 <label class="input-group lead" for="caption">Caption</label>
                 <textarea class="form-control" rows="3" placeholder="Write a caption..." id="caption" name="caption"></textarea>
                 <br><br>
-                <button class="btn btn-primary col-md-12" type="submit">Upload</button>
+                <button class="btn btn-success col-md-12" type="submit">Submit</button>
             </form>
         </div>
     </div>
-    <div class="row" v-else><div class="jumbotron"><h3>You are not logged in</h3></div></div>`,
+    <div class="row" v-else>
+        <div class="jumbotron">
+            <h3>You are not logged in</h3>
+        </div>
+    </div>`,
         created:function(){
             let self = this;
             if(localStorage.getItem('token')!==null){
@@ -392,36 +422,48 @@ template:`
             <div class="container" v-if="usertoken !=''">
              <div class="row">
                 <div v-if="posts.length>=1" class="row col-md-7 float-left">
-                    <div class="jumbotron shadow" v-for="post in posts">
-                        <div class="row">
+                    <div class="jumbotron shadow" style="width:90%" v-for="post in posts">
+                        <div class="row userimage">
                             <img class="postuserphoto" v-bind:src="post.userphoto"> <h5 class="align-middle" >{{post.username}}</h5>
                         </div>
                         <br>
-                        <div>
-                            <img class="img-fluid postimages" v-bind:src="post.photo"/>
+                        <div class="row col-md-12">
+                            <img class="postimages img-thumbnail shadow" v-bind:src="post.photo"/>
                         </div>
                         <br>
-                        <p class="caption">{{post.caption}}</p>
+                        <div class="row col-md-12">
+                            <p class="lead postcaption">{{post.caption}}</p>    
+                        </div>
+                        <br>
                         <div class="row">
-                            <div v-if="post.likebyuser=='No'">
-                                    <img :id=post.id v-on:click="like(post.id)" style="width:35px; height:35px" v-bind:src="'static/uploads/pgheart.png'" />
+                            <div class="col-md-1" :id="'likebutton'+post.id" v-if="post.likebyuser=='No'">
+                                    <img :id=post.id v-on:click="like(post.id)" class="likebutton" v-bind:src="'static/images/tolike.png'" />
                             </div>
-                            <div v-else>
-                                    <img style="width:35px; height:35px" v-bind:src="'static/uploads/pgheart.png'" />
+                            <div class="col-md-1" v-else>
+                                    <img class="likebutton" v-bind:src="'static/images/redheart.png'" />
                             </div>
-                        <p>Likes: <span :id="'like'+post.id">{{post.likes}}</span></p></div>
-                        <p>{{post.created_on}}</p>
-                    </div>
+                            <div class="col-md-5">
+                                <p class="likename"> <span :id="'like'+post.id">{{post.likes}}</span> Likes</p>
+                            </div>
+                            <div class="col-md-5 postdate">
+                                <p>{{post.created_on}}</p></div>
+                            </div>
+                            
+                        </div>
                 </div>
                 <div class="jumbotron" v-else>
                     <h5> No Posts</h5>
                 </div>
                 <div class="col-md-5 float-right">
-                    <router-link class="btn btn-success col-md-6" to="/postnew">New Post</router-link>
+                    <router-link class="btn btn-primary col-md-6" to="/postnew">New Post</router-link>
                 </div>
             </div>
         </div>
-        <div class="row regular" v-else><div class="jumbotron shadow"><h3 class="align-middle">You are not logged in</h3></div></div>`,
+        <div class="row regular" v-else>
+            <div class="jumbotron shadow">
+                <h3 class="align-middle">You are not logged in</h3>
+            </div>
+        </div>`,
         created: function () {
             let self = this;
             if(localStorage.getItem('token')!==null){
@@ -478,7 +520,12 @@ template:`
                         if (jsonResponse.response){
                             alert(jsonResponse.response['0']['message']);
                             document.getElementById('like'+postid).innerHTML=likevalue;
-                            document.getElementById(postid).disabled=true;
+                            like=document.getElementById(postid);
+                            document.getElementById('likebutton'+postid).removeChild(like);
+                            newicon=document.createElement('IMG');
+                            newicon.setAttribute('src','static/images/redheart.png');
+                            newicon.classList.add('likebutton');
+                            document.getElementById('likebutton'+postid).appendChild(newicon);
                         }
                     })
                     .catch(function (error) {
@@ -492,7 +539,7 @@ template:`
 const UserPost=Vue.component('Userposts',{
 template:`<div v-if="usertoken!==''">
             <div v-if="error ===''">
-                <div id="profile" class="container shadow jumbotron col-md-12 sticky-top" >
+                <div id="profile" class="container shadow jumbotron col-md-12" >
                     <div class="row">
                         <div class="col-lg-2 col-md-8"> 
                             <img class="displayphoto" v-bind:src="userinfo.photo" />
@@ -509,7 +556,7 @@ template:`<div v-if="usertoken!==''">
                                     <h4><span class="colors">{{numposts}}</span></br>Posts</h4>
                                 </div>
                                 <div class="col-lg-2 col-md-2 follow">
-                                    <h4><span class="colors">{{follows}}</span></br>Followers</h4>
+                                    <h4><span id="followers" class="colors">{{follows}}</span></br>Followers</h4>
                                 </div>
                             </div>
                             <div class="col-lg-8 float-right followbutton col-md-6">
@@ -526,30 +573,19 @@ template:`<div v-if="usertoken!==''">
                         </div>
                     </div>
                 </div>
-                <div class="container" v-if="posts.length > 0">
-                    <div class="row" v-for='n in rows'>
-                        <hr class="col-md-11">
-                        <div v-if="n-1 < posts.length" class="col-lg-4"> 
-                            <img class="postphotos" v-bind:src="posts[n-1]['photo']" />
-                        </div>
-                        <div v-if="n-1+1 < posts.length" class="col-lg-4"> 
-                            <img class="postphotos" v-bind:src="posts[n-1+1]['photo']" />
-                        </div>
-                        <div v-if="n-1+2 < posts.length" class="col-lg-4">
-                           <img class="postphotos" v-bind:src="posts[n-1+2]['photo']" />
-                        </div>
-                        
-                    </div>
-                </div>
-                <div v-else>
-                    <h3>No posts yet</h3>
+                <div id="postdisplay" class="container">
+                    
                 </div>
             </div>
             <div class="jumbotron" v-else>
                 <h1>User Doesn't exist</h1>
             </div>
         </div>
-        <div class="row regular" v-else><div class="jumbotron shadow"><h3 class="align-middle">You are not logged in</h3></div></div>`,
+        <div class="row regular" v-else>
+            <div class="jumbotron shadow">
+                <h3 class="align-middle">You are not logged in</h3>
+            </div>
+        </div>`,
         created: function () {
             if(localStorage.getItem('token')!==null){
                 let self = this;
@@ -573,6 +609,39 @@ template:`<div v-if="usertoken!==''">
                         self.numposts=jsonResponse.response['0']['numposts'];
                         self.follows=jsonResponse.response['0']['follows'];
                         self.userinfo=jsonResponse.response['0']['userinfo'];
+                        
+                        if(self.posts.length < 1){
+                            nopost=document.createElement('DIV');
+                            h3=document.createElement('H3');
+                            h3.appendChild(document.createTextNode('No post Yet'));
+                            nopost.appendChild(h3);
+                            postcontainer=document.getElementById('postdisplay');
+                            postdisplay.appendChild(nopost);
+                            
+                            
+                        }
+                        else{
+                            postcontainer=document.getElementById('postdisplay');
+                            for(i=0;i<self.posts.length+1;i++){
+                                row=document.createElement('DIV');
+                                row.classList.add('row');
+                                for (m=1;m<self.columns+1;m++){
+                                    if(i-1+m<self.posts.length){
+                                        picdiv=document.createElement('DIV');
+                                        picdiv.classList.add('col-lg-4');
+                                        pic=document.createElement('IMG');
+                                        pic.setAttribute('src',self.posts[i-1+m]['photo'])
+                                        pic.classList.add('postphotos','shadow','img-thumbnail');
+                                        picdiv.appendChild(pic);
+                                        row.appendChild(picdiv);
+                                    }
+                                }
+                                postcontainer.appendChild(row);
+                                postcontainer.appendChild(document.createElement('HR'));
+                                i+=self.columns-1;
+                            }
+                        }
+                        
                         if((jsonResponse.response['0']['current']==='No' &&  jsonResponse.response['0']['following']==='No')===true){
                             self.toshow='Yes';
                         }
@@ -602,6 +671,7 @@ template:`<div v-if="usertoken!==''">
                 toshow:'',
                 columns:3,
                 rows:0,
+                limits:[0],
             }
         },methods:{
             follow:function(){

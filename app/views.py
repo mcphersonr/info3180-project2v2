@@ -19,6 +19,7 @@ from functools import wraps
 # Routing for your application.
 ###
 
+postfolder='/static/uploads/'
 
 
 def requires_auth(f):
@@ -131,7 +132,7 @@ def login():
             payload = {'user_id' : user.id}
             token = jwt.encode(payload, token_key)
             session['userid'] = user.id;
-            return jsonify(response=[{'message':'Log in successful','token': token, 'userid': user.id,'userphoto':'/static/uploads/'+user.profile_photo}])
+            return jsonify(response=[{'message':'Log in successful','token': token, 'userid': user.id,'userphoto':postfolder+user.profile_photo}])
         else:
             return jsonify(errors=[{'error':['Password and user name does not match our records.']}])
     return jsonify(errors=[{'error':form_errors(form)}])
@@ -160,7 +161,7 @@ def addpost(user_id):
             thisuser='No'
         user=Users.query.filter_by(id=uid).first()
         if user is not None:
-            userinfo={'id':user.id,'username':user.username,'fname':user.first_name,'lname':user.last_name,'location':user.location,'photo':'/static/uploads/'+user.profile_photo,'bio':user.biography,'joined':user.joined_on.strftime("%d %b %Y")}
+            userinfo={'id':user.id,'username':user.username,'fname':user.first_name,'lname':user.last_name,'location':user.location,'photo':'/static/uploads/'+user.profile_photo,'bio':user.biography,'joined':user.joined_on.strftime("%B %Y")}
             posts=Posts.query.filter_by(user_id=uid).all()
             follows=Follows.query.filter_by(user_id=uid).all()
             following=Follows.query.filter_by(follower_id=session['userid'], user_id=uid).first()
@@ -238,12 +239,12 @@ def convertposts(posts):
         x={
         'id':posts[i].id,
         'user_id':posts[i].user_id,
-        'photo':"/static/uploads/"+posts[i].photo,
+        'photo':postfolder+posts[i].photo,
         'caption':posts[i].caption,
-        'created_on':posts[i].created_on.strftime("%B %Y"),
+        'created_on':posts[i].created_on.strftime("%d %b %Y"),
         'likes':countlikes(posts[i].id),
         'username':username,
-        'userphoto':'/static/uploads/'+profilephoto,
+        'userphoto':postfolder+profilephoto,
         'likebyuser':liketest
         }
         newposts.append(x)
