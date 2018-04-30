@@ -419,7 +419,7 @@ const AddPost=Vue.component('addpost',{
 
 const Explorer=Vue.component('Allposts',{
 template:`
-            <div class="container" v-if="usertoken !=''">
+            <div class="container explorer" v-if="usertoken !=''">
              <div class="row">
                 <div v-if="posts.length>=1" class="row col-md-7 float-left">
                     <div class="jumbotron shadow" style="width:90%" v-for="post in posts">

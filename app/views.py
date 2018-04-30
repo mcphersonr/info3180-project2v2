@@ -142,7 +142,8 @@ def login():
 @requires_auth
 def logout():
     g.current_user=None
-    session.pop('userid')
+    if session['userid']:
+        session.pop('userid')
     return jsonify(response=[{'message':'User successfully logged out.'}])
 
     
@@ -197,7 +198,7 @@ def follow(user_id):
 @app.route("/api/posts",methods=["GET"])
 @requires_auth
 def getpost():
-    posts=Posts.query.order_by(Posts.created_on).all()
+    posts=Posts.query.order_by(Posts.created_on.desc()).all()
     return jsonify(response=[{'posts':convertposts(posts)}])
         
 @app.route("/api/posts/<int:post_id>/like",methods=["POST"])
