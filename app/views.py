@@ -19,7 +19,7 @@ from functools import wraps
 # Routing for your application.
 ###
 
-postfolder='/static/uploads/'
+postfolder='/static/images/'
 
 
 def requires_auth(f):
