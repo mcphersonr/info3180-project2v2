@@ -45,7 +45,6 @@ Vue.component('app-header', {
             user: [],
             userid:'',
             userphoto:'/static/images/instagram.png',
-            console.log(userphoto);
         }
     },
     methods:{
