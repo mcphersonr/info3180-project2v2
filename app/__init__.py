@@ -4,7 +4,7 @@ from flask_login import LoginManager
 from flask_wtf.csrf import CSRFProtect
 
 
-UPLOAD_FOLDER = './app/static/uploads'
+UPLOAD_FOLDER = './app/static/images'
 TOKEN_SECRET = 'Thisissecret'
 
 app = Flask(__name__)

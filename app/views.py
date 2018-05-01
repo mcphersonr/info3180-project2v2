@@ -162,7 +162,7 @@ def addpost(user_id):
             thisuser='No'
         user=Users.query.filter_by(id=uid).first()
         if user is not None:
-            userinfo={'id':user.id,'username':user.username,'fname':user.first_name,'lname':user.last_name,'location':user.location,'photo':'/static/uploads/'+user.profile_photo,'bio':user.biography,'joined':user.joined_on.strftime("%B %Y")}
+            userinfo={'id':user.id,'username':user.username,'fname':user.first_name,'lname':user.last_name,'location':user.location,'photo':postfolder+user.profile_photo,'bio':user.biography,'joined':user.joined_on.strftime("%B %Y")}
             posts=Posts.query.filter_by(user_id=uid).all()
             follows=Follows.query.filter_by(user_id=uid).all()
             following=Follows.query.filter_by(follower_id=session['userid'], user_id=uid).first()
