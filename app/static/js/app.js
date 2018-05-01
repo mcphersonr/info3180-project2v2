@@ -45,6 +45,7 @@ Vue.component('app-header', {
             user: [],
             userid:'',
             userphoto:'/static/images/instagram.png',
+            console.log(userphoto);
         }
     },
     methods:{
@@ -468,7 +469,6 @@ template:`
             let self = this;
             if(localStorage.getItem('token')!==null){
                 self.usertoken=localStorage.getItem('token');
-                console.log(self.usertoken);
                 fetch("/api/posts", { 
                 method: 'GET',
                 headers: {
@@ -484,7 +484,6 @@ template:`
                 .then(function (jsonResponse) {
         
                     self.posts=jsonResponse.response['0']['posts'];
-                    console.log(self.posts);
                 })
                 .catch(function (error) {
                     console.log(error);
